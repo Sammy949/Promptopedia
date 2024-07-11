@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@components/loading";
 import Form from "@components/Form";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -54,7 +55,7 @@ const EditPrompt = () => {
   };
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loading />}>
       <Form
         type="Edit"
         post={post}
