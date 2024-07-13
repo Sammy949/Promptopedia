@@ -40,7 +40,6 @@ const MyProfile = () => {
         setPosts(filteredPosts);
 
         // Notify the main feed to refresh posts
-        // Assuming you have a method or context to refresh the feed
         if (typeof window !== "undefined") {
           window.dispatchEvent(new Event("postsUpdated"));
         }
