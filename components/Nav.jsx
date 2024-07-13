@@ -79,11 +79,7 @@ const Nav = () => {
               height={37}
               className="rounded-full"
               alt="Profile"
-              onClick={() =>
-                setToggleDropdown((prev) => {
-                  !prev;
-                })
-              }
+              onClick={() => setToggleDropdown((prev) => !prev)}
             />
             {toggleDropdown && (
               <div className="dropdown">
@@ -105,7 +101,7 @@ const Nav = () => {
                   type="button"
                   onClick={() => {
                     setToggleDropdown(false);
-                    signOut;
+                    signOut();
                   }}
                   className="mt-5 w-full black_btn"
                 >

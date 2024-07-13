@@ -2,8 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useCallback } from "react";
-
+import { useEffect, useState } from "react";
 import Profile from "@components/Profile";
 
 const MyProfile = () => {
@@ -13,41 +12,30 @@ const MyProfile = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      if (session?.user.id) {
-        const response = await fetch(`/api/users/${session.user.id}/posts`);
-        const data = await response.json();
-        setPosts(data);
-      }
+      const response = await fetch(`/api/users/${session?.user.id}/posts`);
+      const data = await response.json();
+      setPosts(data);
     };
 
-    fetchPosts();
-  }, [session?.user.id]);
+    if (session?.user.id) fetchPosts();
+  }, [session]);
 
   const handleEdit = (post) => {
     router.push(`/update-prompt?id=${post._id}`);
   };
 
   const handleDelete = async (post) => {
-    const hasConfirmed = confirm(
-      "Are you sure you want to delete this prompt?"
-    );
-
+    const hasConfirmed = confirm("Are you sure you want to delete this prompt?");
     if (hasConfirmed) {
       try {
-        await fetch(`/api/prompt/${post._id.toString()}`, {
+        await fetch(`/api/prompt/${post._id}`, {
           method: "DELETE",
         });
 
         const filteredPosts = posts.filter((p) => p._id !== post._id);
         setPosts(filteredPosts);
-
-        // Notify the main feed to refresh posts
-        // Assuming you have a method or context to refresh the feed
-        if (typeof window !== "undefined") {
-          window.dispatchEvent(new Event("postsUpdated"));
-        }
       } catch (error) {
-        console.error(error);
+        console.log(error);
       }
     }
   };

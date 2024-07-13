@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import PromptCard from "./PromptCard";
 
 const PromptCardList = ({ data, handleTagClick }) => {
@@ -23,26 +23,15 @@ const Feed = () => {
   const [searchTimeout, setSearchTimeout] = useState(null);
   const [searchedResults, setSearchedResults] = useState([]);
 
-  const fetchPosts = useCallback(async () => {
+  const fetchPosts = async () => {
     const response = await fetch("/api/prompt");
     const data = await response.json();
     setPosts(data);
-  }, []);
+  };
 
   useEffect(() => {
     fetchPosts();
-
-    // Listen for the custom event to refresh posts
-    const handlePostsUpdated = () => {
-      fetchPosts();
-    };
-
-    window.addEventListener("postsUpdated", handlePostsUpdated);
-
-    return () => {
-      window.removeEventListener("postsUpdated", handlePostsUpdated);
-    };
-  }, [fetchPosts]);
+  }, []);
 
   const filterPrompts = (searchText) => {
     const regex = new RegExp(searchText, "i");
@@ -56,12 +45,11 @@ const Feed = () => {
 
   const handleSearchChange = (e) => {
     clearTimeout(searchTimeout);
-    const searchValue = e.target.value;
-    setSearchText(searchValue);
+    setSearchText(e.target.value);
 
     setSearchTimeout(
       setTimeout(() => {
-        const searchResult = filterPrompts(searchValue);
+        const searchResult = filterPrompts(e.target.value);
         setSearchedResults(searchResult);
       }, 500)
     );
@@ -72,11 +60,6 @@ const Feed = () => {
     const searchResult = filterPrompts(tag);
     setSearchedResults(searchResult);
   };
-
-  // New method to trigger re-fetching posts
-  const refreshPosts = useCallback(() => {
-    fetchPosts();
-  }, []);
 
   return (
     <section className="feed">
