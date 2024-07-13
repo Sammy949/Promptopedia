@@ -73,6 +73,11 @@ const Feed = () => {
     setSearchedResults(searchResult);
   };
 
+  // New method to trigger re-fetching posts
+  const refreshPosts = useCallback(() => {
+    fetchPosts();
+  }, []);
+
   return (
     <section className="feed">
       <form className="relative w-full flex-center">
