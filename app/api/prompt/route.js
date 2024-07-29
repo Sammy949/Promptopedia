@@ -1,20 +1,14 @@
 import Prompt from "@models/prompt";
-import { connectToDatabase } from "@utils/database";
-import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
+import { connectToDB } from "@utils/database";
 
-export const GET = async (request) => {
+export const revalidate = 1; //revalidate api every 1 second
+export const GET = async (req) => {
   try {
-    await connectToDatabase();
+    await connectToDB();
 
     const prompts = await Prompt.find({}).populate("creator");
 
-    //To dynamically get the path
-    const path = request.nextUrl.searchParams.get("path") || "/";
-
-    revalidatePath(path);
-
-    return NextResponse.json(prompts);
+    return new Response(JSON.stringify(prompts), { status: 200 });
   } catch (error) {
     return new Response("Failed to fetch all prompts", { status: 500 });
   }
